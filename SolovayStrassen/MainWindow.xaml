@@ -1,0 +1,68 @@
+﻿<mahapps:MetroWindow x:Class="SolovayStrassen.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mahapps="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:local="clr-namespace:SolovayStrassen"
+        xmlns:converters="clr-namespace:SolovayStrassen.Converters"
+        mc:Ignorable="d"
+        GlowBrush="{DynamicResource AccentColorBrush}"
+        Title="Primality Test" Height="220" Width="400">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+
+        <Style TargetType="Label">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    <mahapps:MetroWindow.RightWindowCommands>
+        <mahapps:WindowCommands>
+            <Button x:Name="BAbout" Content="About" Click="BAbout_Click"/>
+        </mahapps:WindowCommands>
+    </mahapps:MetroWindow.RightWindowCommands>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.8*"/>
+            <RowDefinition Height="1.2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Enter number" Grid.Column="0" HorizontalContentAlignment="Center" VerticalAlignment="Bottom"/>
+            <Label Content="Enter interations" Grid.Column="1" HorizontalContentAlignment="Center" VerticalAlignment="Bottom"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <mahapps:NumericUpDown Value="{Binding Number}" Grid.Column="0" Margin="10"/>
+            <mahapps:NumericUpDown Value="{Binding Iterations}" Grid.Column="1" Margin="10"/>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button Command="{Binding SolvePrimality}" IsEnabled="{Binding CanSolve}" Grid.Column="0" Content="Go" Margin="10"/>
+            <Button Command="{Binding SolvePrimality.CancelCommand}" Grid.Column="1" Content="Cancel" Margin="10"/>
+        </Grid>
+        <Grid Grid.Row="3" Visibility="{Binding SolvePrimality.Execution, Converter={StaticResource NullToVisibilityConverter}}">
+            <!--Busy indicator-->
+            <mahapps:MetroProgressBar Margin="10" IsIndeterminate="True" Visibility="{Binding SolvePrimality.Execution.IsNotCompleted, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <!--Results-->
+            <Label Margin="10" Content="{Binding SolvePrimality.Execution.Result}" Visibility="{Binding SolvePrimality.Execution.IsSuccessfullyCompleted, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <!--Error details-->
+            <Label Content="{Binding SolvePrimality.Execution.ErrorMessage}" Visibility="{Binding SolvePrimality.Execution.IsFaulted, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="Red" />
+            <!--Canceled-->
+            <Label Margin="10" Content="Canceled" Visibility="{Binding SolvePrimality.Execution.IsCanceled, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="Blue" />
+        </Grid>
+    </Grid>
+</mahapps:MetroWindow>
