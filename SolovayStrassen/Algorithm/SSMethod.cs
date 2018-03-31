@@ -22,7 +22,7 @@ namespace SolovayStrassen.Algorithm
                 return true;
             /** an even number other than 2 is composite **/
             if (number % 2 == 0)
-                return true;
+                return false;
 
             Random rand = new Random();
             for (int i = 0; i < iteration; i++)
